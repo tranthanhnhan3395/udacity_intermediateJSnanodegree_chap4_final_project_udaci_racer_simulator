@@ -7,6 +7,10 @@ var store = {
   race_id: undefined,
 };
 
+const updateStore = (store, newState) => {
+  store = Object.assign(store, newState);
+};
+
 // We need our javascript to wait until the DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
   onPageLoad();
@@ -142,7 +146,7 @@ function handleSelectPodRacer(target) {
   // add class selected to current target
   target.classList.add('selected');
 
-  // TODO - save the selected racer to the store
+  updateStore(store, { player_id: target.id });
 }
 
 function handleSelectTrack(target) {
@@ -157,7 +161,7 @@ function handleSelectTrack(target) {
   // add class selected to current target
   target.classList.add('selected');
 
-  // TODO - save the selected track id to the store
+  updateStore(store, { track_id: target.id });
 }
 
 function handleAccelerate() {
