@@ -179,7 +179,7 @@ function renderRacerCars(racers) {
 
   return `
 		<ul id="racers">
-			${reuslts}
+			${results}
 		</ul>
 	`;
 }
@@ -316,11 +316,17 @@ function defaultFetchOpts() {
 // TODO - Make a fetch call (with error handling!) to each of the following API endpoints
 
 function getTracks() {
-  // GET request to `${SERVER}/api/tracks`
+  // TODO - Add handler in case request failed
+  return fetch(`${SERVER}/api/tracks`)
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
 }
 
 function getRacers() {
-  // GET request to `${SERVER}/api/cars`
+  // TODO - Add handler in case request failed
+  return fetch(`${SERVER}/api/cars`)
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
 }
 
 function createRace(player_id, track_id) {
