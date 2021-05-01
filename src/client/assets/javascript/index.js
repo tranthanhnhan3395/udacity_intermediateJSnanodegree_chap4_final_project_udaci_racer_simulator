@@ -353,17 +353,13 @@ function defaultFetchOpts() {
   };
 }
 
-// TODO - Make a fetch call (with error handling!) to each of the following API endpoints
-
 function getTracks() {
-  // TODO - Add handler in case request failed
   return fetch(`${SERVER}/api/tracks`)
     .then((response) => response.json())
     .catch((error) => console.log(error));
 }
 
 function getRacers() {
-  // TODO - Add handler in case request failed
   return fetch(`${SERVER}/api/cars`)
     .then((response) => response.json())
     .catch((error) => console.log(error));
