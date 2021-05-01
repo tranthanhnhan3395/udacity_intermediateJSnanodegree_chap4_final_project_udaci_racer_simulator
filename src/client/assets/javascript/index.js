@@ -399,7 +399,6 @@ function startRace(id) {
       ...defaultFetchOpts(),
     })
       // no need to do anything since response is empty
-      .then()
       .catch((err) => console.log('Problem with getRace request::', err))
   );
 }
@@ -411,7 +410,6 @@ function accelerate(id) {
       ...defaultFetchOpts(),
     })
       // no need to do anything since response is empty
-      .then()
       .catch((err) => console.log('Problem with accelerate request::', err))
   );
 }
