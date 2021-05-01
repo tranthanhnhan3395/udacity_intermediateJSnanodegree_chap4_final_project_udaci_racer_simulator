@@ -64,7 +64,7 @@ function setupClickHandlers() {
 
       // Handle acceleration click
       if (target.matches('#gas-peddle')) {
-        handleAccelerate(target);
+        handleAccelerate();
       }
     },
     false,
@@ -120,7 +120,7 @@ function runRace(raceID) {
       const proceedToRaceResult = (positions) => {
         clearInterval(updateRaceInfoInterval);
         renderAt('#race', resultsView(positions));
-        resolve(res);
+        resolve();
       };
 
       const updateRaceInfo = function (raceId) {
@@ -202,7 +202,7 @@ function handleSelectTrack(target) {
 
 function handleAccelerate() {
   console.log('accelerate button clicked');
-  // TODO - Invoke the API call to accelerate
+  accelerate(store.race_id);
 }
 
 // HTML VIEWS ------------------------------------------------
@@ -396,14 +396,20 @@ function startRace(id) {
       method: 'POST',
       ...defaultFetchOpts(),
     })
-      // no need to do anything since races/${id}/start will return empty data
+      // no need to do anything since response is empty
       .then()
       .catch((err) => console.log('Problem with getRace request::', err))
   );
 }
 
 function accelerate(id) {
-  // POST request to `${SERVER}/api/races/${id}/accelerate`
-  // options parameter provided as defaultFetchOpts
-  // no body or datatype needed for this request
+  return (
+    fetch(`${SERVER}/api/races/${id - 1}/accelerate`, {
+      method: 'POST',
+      ...defaultFetchOpts(),
+    })
+      // no need to do anything since response is empty
+      .then()
+      .catch((err) => console.log('Problem with accelerate request::', err))
+  );
 }
