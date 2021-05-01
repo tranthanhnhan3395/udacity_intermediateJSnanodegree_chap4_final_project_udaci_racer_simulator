@@ -95,7 +95,7 @@ async function handleCreateRace() {
   );
 
   const race = await createRace(player_id, track_id);
-  updateStore(store, { race_id: parseInt(race.ID) });
+  updateStore(store, { race_id: parseInt(race.ID - 1) });
 
   // retrieve the race_id just updated from store
   const { race_id } = store;
@@ -381,14 +381,14 @@ function createRace(player_id, track_id) {
 }
 
 function getRace(id) {
-  return fetch(`${SERVER}/api/races/${id - 1}`)
+  return fetch(`${SERVER}/api/races/${id}`)
     .then((response) => response.json())
     .catch((error) => console.log(error));
 }
 
 function startRace(id) {
   return (
-    fetch(`${SERVER}/api/races/${id - 1}/start`, {
+    fetch(`${SERVER}/api/races/${id}/start`, {
       method: 'POST',
       ...defaultFetchOpts(),
     })
@@ -400,7 +400,7 @@ function startRace(id) {
 
 function accelerate(id) {
   return (
-    fetch(`${SERVER}/api/races/${id - 1}/accelerate`, {
+    fetch(`${SERVER}/api/races/${id}/accelerate`, {
       method: 'POST',
       ...defaultFetchOpts(),
     })
