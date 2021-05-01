@@ -95,12 +95,16 @@ async function handleCreateRace() {
   );
 
   const race = await createRace(player_id, track_id);
-  updateStore(store, { race_id: parseInt(race.id) });
+  updateStore(store, { race_id: parseInt(race.ID) });
+
+  // retrieve the race_id just updated from store
+  const { race_id } = store;
 
   // The race has been created, now start the countdown
-  runCountdown();
+  await runCountdown();
 
   // TODO - call the async function startRace
+  await startRace(race_id);
 
   // TODO - call the async function runRace
 }
@@ -370,11 +374,12 @@ function getRace(id) {
 }
 
 function startRace(id) {
-  return fetch(`${SERVER}/api/races/${id}/start`, {
+  return fetch(`${SERVER}/api/races/${id - 1}/start`, {
     method: 'POST',
     ...defaultFetchOpts(),
   })
-    .then((res) => res.json())
+  // no need to do anything since races/${id}/start will return empty data
+    .then()
     .catch((err) => console.log('Problem with getRace request::', err));
 }
 
