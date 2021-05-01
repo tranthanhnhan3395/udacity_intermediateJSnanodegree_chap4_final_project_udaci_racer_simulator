@@ -107,25 +107,40 @@ async function handleCreateRace() {
   await startRace(race_id);
 
   // TODO - call the async function runRace
+  await runRace(race_id);
 }
 
 function runRace(raceID) {
-  return new Promise((resolve) => {
-    // TODO - use Javascript's built in setInterval method to get race info every 500ms
-    /* 
-		TODO - if the race info status property is "in-progress", update the leaderboard by calling:
+  try {
+    return new Promise((resolve) => {
+      const updateLeaderboard = (positions) => {
+        renderAt('#leaderBoard', raceProgress(positions));
+      };
 
-		renderAt('#leaderBoard', raceProgress(res.positions))
-	*/
-    /* 
-		TODO - if the race info status property is "finished", run the following:
+      const proceedToRaceResult = (positions) => {
+        clearInterval(updateRaceInfoInterval);
+        renderAt('#race', resultsView(positions));
+        resolve(res);
+      };
 
-		clearInterval(raceInterval) // to stop the interval from repeating
-		renderAt('#race', resultsView(res.positions)) // to render the results view
-		reslove(res) // resolve the promise
-	*/
-  });
-  // remember to add error handling for the Promise
+      const updateRaceInfo = function (raceId) {
+        console.log('updating race info');
+
+        getRace(raceID).then((race) => {
+          const { status, positions } = race;
+          if (status === 'in-progress') {
+            updateLeaderboard(positions);
+          } else if (status === 'finished') {
+            proceedToRaceResult(positions);
+          }
+        });
+      };
+
+      const updateRaceInfoInterval = setInterval(updateRaceInfo, 500, raceID);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function runCountdown() {
@@ -370,17 +385,21 @@ function createRace(player_id, track_id) {
 }
 
 function getRace(id) {
-  // GET request to `${SERVER}/api/races/${id}`
+  return fetch(`${SERVER}/api/races/${id - 1}`)
+    .then((response) => response.json())
+    .catch((error) => console.log(error));
 }
 
 function startRace(id) {
-  return fetch(`${SERVER}/api/races/${id - 1}/start`, {
-    method: 'POST',
-    ...defaultFetchOpts(),
-  })
-  // no need to do anything since races/${id}/start will return empty data
-    .then()
-    .catch((err) => console.log('Problem with getRace request::', err));
+  return (
+    fetch(`${SERVER}/api/races/${id - 1}/start`, {
+      method: 'POST',
+      ...defaultFetchOpts(),
+    })
+      // no need to do anything since races/${id}/start will return empty data
+      .then()
+      .catch((err) => console.log('Problem with getRace request::', err))
+  );
 }
 
 function accelerate(id) {
