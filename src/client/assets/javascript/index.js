@@ -315,15 +315,17 @@ function raceProgress(positions) {
   positions = positions.sort((a, b) => (a.segment > b.segment ? -1 : 1));
   let count = 1;
 
-  const results = positions.map((p) => {
-    return `
+  const results = positions
+    .map((p) => {
+      return `
 			<tr>
 				<td>
 					<h3>${count++} - ${p.driver_name}</h3>
 				</td>
 			</tr>
 		`;
-  });
+    })
+    .join(' ');
 
   return `
 		<main>
