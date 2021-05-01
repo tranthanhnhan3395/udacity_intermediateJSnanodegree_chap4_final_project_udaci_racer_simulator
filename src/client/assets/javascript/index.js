@@ -83,7 +83,7 @@ async function delay(ms) {
 
 // This async function controls the flow of the race, add the logic and error handling
 async function handleCreateRace() {
-  const { tracks, track_id, racers } = store;
+  const { tracks, track_id, racers, player_id } = store;
 
   // render starting UI
   renderAt(
@@ -94,14 +94,11 @@ async function handleCreateRace() {
     ),
   );
 
-  // TODO - Get player_id and track_id from the store
-
-  // const race = TODO - invoke the API call to create the race, then save the result
-
-  // TODO - update the store with the race id
+  const race = await createRace(player_id, track_id);
+  updateStore(store, { race_id: parseInt(race.id) });
 
   // The race has been created, now start the countdown
-  // TODO - call the async function runCountdown
+  runCountdown();
 
   // TODO - call the async function startRace
 
@@ -134,12 +131,20 @@ async function runCountdown() {
     let timer = 3;
 
     return new Promise((resolve) => {
-      // TODO - use Javascript's built in setInterval method to count down once per second
+      const decreaseBigNumbersAndExitWhenDone = () => {
+        let bigNumbers = document.getElementById('big-numbers');
+        bigNumbers.innerHTML = --timer;
 
-      // run this DOM manipulation to decrement the countdown for the user
-      document.getElementById('big-numbers').innerHTML = --timer;
+        if (timer === 0) {
+          clearInterval(timerDecrementInterval);
+          resolve();
+        }
+      };
 
-      // TODO - if the countdown is done, clear the interval, resolve the promise, and return
+      const timerDecrementInterval = setInterval(
+        decreaseBigNumbersAndExitWhenDone,
+        1000,
+      );
     });
   } catch (error) {
     console.log(error);
