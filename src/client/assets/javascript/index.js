@@ -5,6 +5,8 @@ var store = {
   track_id: undefined,
   player_id: undefined,
   race_id: undefined,
+  tracks: [],
+  racers: [],
 };
 
 const updateStore = (store, newState) => {
@@ -22,11 +24,13 @@ async function onPageLoad() {
     getTracks().then((tracks) => {
       const html = renderTrackCards(tracks);
       renderAt('#tracks', html);
+      updateStore(store, { tracks });
     });
 
     getRacers().then((racers) => {
       const html = renderRacerCars(racers);
       renderAt('#racers', html);
+      updateStore(store, { racers });
     });
   } catch (error) {
     console.log('Problem getting tracks and racers ::', error.message);
@@ -79,8 +83,16 @@ async function delay(ms) {
 
 // This async function controls the flow of the race, add the logic and error handling
 async function handleCreateRace() {
+  const { tracks, track_id, racers } = store;
+
   // render starting UI
-  renderAt('#race', renderRaceStartView());
+  renderAt(
+    '#race',
+    renderRaceStartView(
+      tracks.find((track) => track.id === track_id),
+      racers,
+    ),
+  );
 
   // TODO - Get player_id and track_id from the store
 
@@ -146,7 +158,7 @@ function handleSelectPodRacer(target) {
   // add class selected to current target
   target.classList.add('selected');
 
-  updateStore(store, { player_id: target.id });
+  updateStore(store, { player_id: parseInt(target.id) });
 }
 
 function handleSelectTrack(target) {
@@ -161,7 +173,7 @@ function handleSelectTrack(target) {
   // add class selected to current target
   target.classList.add('selected');
 
-  updateStore(store, { track_id: target.id });
+  updateStore(store, { track_id: parseInt(target.id) });
 }
 
 function handleAccelerate() {
